@@ -4,51 +4,55 @@ import enuns.Controle;
 
 public class Controller {
 
-    private StringBuffer tudo;
-    private int num;
+    private StringBuilder tudo;
+    private int numero;
     private Controle controle;
     private boolean abre;
 
     public String execute(String instrucao) {
-        tudo = new StringBuffer("");
-        num = 0;
+        tudo = new StringBuilder("");
+        numero = 0;
         controle = Controle.MANTEM;
         abre = false;
         for (int i = 0; i < instrucao.length(); i++) {
             if (instrucao.charAt(i) == '.') {
-                ponto();
+                executarQuandoNaoHouveAcao();
             } else if (instrucao.charAt(i) == 'P') {
                 abre = !abre;
-                p(abre);
+                executarQuandoHouverCliqueNoBotao(abre);
             } else {//'O'
-                o();
+                executarAcaoQuandoHouverObstaculo();
             }
         }
         
         return tudo.toString();
     }
 
-    private void p(boolean abre) {
+    /**
+     * Executar acao caso hover
+     * clique no botao
+     */
+    private void executarQuandoHouverCliqueNoBotao(boolean abre) {
         if (abre) {
             switch (controle) {
                 case MANTEM:
                     incrementa();
                     controle = Controle.ABRE;
                     break;
-                case ABREM:
+                case ABRE_MANTEM:
                     incrementa();
                     controle = Controle.ABRE;
                     break;
                 case ABRE:
                     incrementa();
-                    controle = Controle.ABREM;
+                    controle = Controle.ABRE_MANTEM;
                     break;
-                case FECHAM:
+                case FECHA_MANTEM:
                     controle = Controle.FECHA;
                     decrementa();
                     break;
                 case FECHA:
-                    controle = Controle.FECHAM;
+                    controle = Controle.FECHA_MANTEM;
                     decrementa();
                     break;
             }
@@ -56,17 +60,21 @@ public class Controller {
         else {
             switch (controle) {
                 case ABRE:
-                    controle = Controle.ABREM;
+                    controle = Controle.ABRE_MANTEM;
                     break;
                 case FECHA:
-                    controle = Controle.FECHAM;
+                    controle = Controle.FECHA_MANTEM;
                     break;
             }
         }
-        tudo.append(num);
+        tudo.append(numero);
     }
 
-    private void o() {
+    /**
+     * Executar ação acao quando houver 
+     * obstaculo
+     */
+    private void executarAcaoQuandoHouverObstaculo() {
         switch (controle) {
             case ABRE:
                 decrementa();
@@ -77,10 +85,14 @@ public class Controller {
                 controle = Controle.ABRE;
                 break;
         }
-        tudo.append(num);
+        tudo.append(numero);
     }
     
-    private void ponto(){
+    /**
+     * Qaundo ninguem apertar o controle
+     * E não tiver nenhum obstaculo no caminho 
+     */
+    private void executarQuandoNaoHouveAcao(){
         switch (controle) {
             case ABRE:
                 incrementa();
@@ -89,25 +101,25 @@ public class Controller {
                 decrementa();
                 break;
         }
-        tudo.append(num);
+        tudo.append(numero);
     }
 
     private void incrementa() {
-        if (num != 5) {
-            num++;
+        if (numero != 5) {
+            numero++;
         }
         else{
-            controle = Controle.FECHAM;
+            controle = Controle.FECHA_MANTEM;
             abre = false;
         }
     }
 
     private void decrementa() {
-        if (num != 0) {
-            num--;
+        if (numero != 0) {
+            numero--;
         }
         else{
-            controle = Controle.ABREM;
+            controle = Controle.ABRE_MANTEM;
             abre = false;
         }
     }

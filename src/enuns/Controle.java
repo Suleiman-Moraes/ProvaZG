@@ -2,8 +2,8 @@ package enuns;
 public enum Controle {
     ABRE,
     FECHA,
-    ABREM,
-    FECHAM,
+    ABRE_MANTEM,
+    FECHA_MANTEM,
     MANTEM;
     
 }
